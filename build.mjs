@@ -70,6 +70,8 @@ function localize(lang) {
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const pad = (n) => String(n).padStart(2, '0');
 const ext = (href) => /^https?:/.test(href) ? ' target="_blank" rel="noopener"' : '';
+// EK plate logo, inlined in the header (same drawing as assets/logo-ek.svg).
+const LOGO = `<svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="9" fill="#050506"/><g fill="#f2f1ee"><rect x="7" y="11" width="5" height="20"/><rect x="7" y="11" width="13" height="5"/><rect x="7" y="18.5" width="11" height="5"/><rect x="7" y="26" width="13" height="5"/><rect x="24" y="11" width="5" height="20"/><polygon points="29,19 36,11 42,11 32,22"/><polygon points="29,23 32,20 42,31 36,31"/></g><rect x="7" y="35" width="13" height="3" fill="#ff6a2b"/><rect x="21" y="35" width="10" height="3" fill="#1b1f6b"/><rect x="32" y="35" width="10" height="3" fill="#2b2b38"/></svg>`;
 const ticks = '<i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>';
 
 function page(C, lang) {
@@ -108,6 +110,7 @@ function page(C, lang) {
 <meta name="twitter:image" content="${C.site.url}/og-${lang}.jpg">
 <script>try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
@@ -117,7 +120,7 @@ function page(C, lang) {
 <a class="skip" href="#main">${ui.skip}</a>
 <header class="bar">
   <div class="wrap bar-in">
-    <a class="mark mono" href="${base}">${esc(C.person.short)}</a>
+    <a class="mark mono" href="${base}">${LOGO}<span>${esc(C.person.short)}</span></a>
     <nav class="mono" aria-label="Main">
       <a href="${base}#work">${ui.nav.work}</a>
       <a href="${base}#experience">${ui.nav.experience}</a>

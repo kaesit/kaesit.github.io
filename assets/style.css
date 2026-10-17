@@ -62,8 +62,9 @@ p { margin: 0; }
 /* top bar */
 .bar { position: sticky; top: 0; z-index: 5; background: var(--bar); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .bar-in { display: flex; align-items: center; justify-content: space-between; height: 52px; padding-inline: var(--gut); border-inline: 1px solid var(--line); }
-.mark { color: var(--fg); }
-.mark::before { content: ''; display: inline-block; width: 7px; height: 7px; background: var(--accent); margin-right: 10px; vertical-align: 1px; }
+.mark { color: var(--fg); display: inline-flex; align-items: center; gap: 10px; }
+.mark .logo { width: 26px; height: 26px; display: block; }
+:root[data-theme="light"] .mark .logo { box-shadow: 0 0 0 1px var(--line-2); border-radius: 5px; }
 .bar nav { display: flex; gap: clamp(14px, 2.4vw, 28px); color: var(--dim); }
 .bar nav a:hover, .bar nav button:hover { color: var(--fg); }
 .bar nav { align-items: center; }
