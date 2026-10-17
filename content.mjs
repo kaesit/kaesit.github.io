@@ -221,6 +221,21 @@ export const skills = ['Python', 'C++', 'JavaScript', 'Node.js', 'PyTorch', 'Ten
 export const languages = ['Turkish (native)', 'English (intermediate / advanced)'];
 export const interests = ['Film production', 'Game production', 'Composing music', 'Graphic design'];
 
+// "Currently" panel on the home page. The latest post is added automatically by build.mjs.
+export const currently = [
+  { key: 'building', value: 'labox', note: 'A platform for simplifying communication between medical devices.', href: 'https://github.com/kaesit/labox' },
+  { key: 'studying', value: 'Software Engineering, Fırat University' },
+];
+
+// Favorites in the About section, in Esad's own words.
+export const favorites = [
+  { title: 'Mr. Robot', year: '2015–2019', kind: 'Series', note: 'I never thought someone would be this brave about telling something different, be this realistic, and still somehow make you watch it.' },
+  { title: 'Kardeş Payı', year: '2014–2015', kind: 'Series', note: 'The Best Turkish Comedy Show' },
+  { title: 'Contact', year: '1997', kind: 'Film', note: 'The ending is a great answer to both believers and non-believers. It really asks: do you only need science, or religion, or is it better when they’re together?' },
+  { title: 'The Matrix & The Gladiator', year: '1999, 2000', kind: 'Films', note: 'The very first movies I ever watched as a kid, so they have a special place in my heart.' },
+  { title: 'Jobs', year: '2013', kind: 'Film', note: 'It inspired me, but it also showed the real side of Steve Jobs. I left the movie inspired, and knowing Steve Jobs wasn’t as pure as we thought when we were kids. But it still inspires me how he thinks and executes in such a visionary way ' },
+];
+
 // Blog posts. Body is a list of blocks: ['h2'|'h3'|'p', text] or ['ul', [items]].
 // The two older posts were carried over from the Framer site.
 export const posts = [

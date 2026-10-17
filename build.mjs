@@ -15,6 +15,7 @@ const UI = {
     lede: ['Software engineer studying at Fırat University. I work on ', 'machine learning for drug discovery', ', computer vision on embedded hardware, and the software around them.'],
     sections: { work: 'Selected work', experience: 'Experience', github: 'Also on GitHub', writing: 'Writing', about: 'About', contact: 'contact' },
     readMore: 'read more', allRepos: 'all repositories', liveDemo: 'live demo', cv: 'cv (pdf)',
+    currently: 'currently', now: { building: 'building', studying: 'studying', latest: 'latest post' }, favorites: 'favorites',
     spec: { role: 'role', when: 'when', context: 'context', stack: 'stack', links: 'links' },
     did: 'What I did', story: 'Story', shots: 'Screenshots', storyKeys: { challenge: 'challenge', goal: 'goal', result: 'result' },
     allWork: 'all work', allWriting: 'all writing', nextProject: 'next project', minRead: 'min read', fig: 'fig.',
@@ -29,6 +30,7 @@ const UI = {
     lede: ['Fırat Üniversitesi’nde okuyan bir yazılım mühendisiyim. ', 'İlaç keşfi için makine öğrenmesi', ', gömülü donanımda bilgisayarlı görü ve bunların etrafındaki yazılımlar üzerine çalışıyorum.'],
     sections: { work: 'Seçili projeler', experience: 'Deneyim', github: 'GitHub’da diğerleri', writing: 'Yazılar', about: 'Hakkımda', contact: 'iletişim' },
     readMore: 'devamı', allRepos: 'tüm depolar', liveDemo: 'canlı demo', cv: 'özgeçmiş (pdf)',
+    currently: 'şu sıralar', now: { building: 'geliştiriyorum', studying: 'okuyorum', latest: 'son yazı' }, favorites: 'favoriler',
     spec: { role: 'rol', when: 'tarih', context: 'bağlam', stack: 'teknolojiler', links: 'bağlantılar' },
     did: 'Neler yaptım', story: 'Hikâye', shots: 'Ekran görüntüleri', storyKeys: { challenge: 'zorluk', goal: 'hedef', result: 'sonuç' },
     allWork: 'tüm projeler', allWriting: 'tüm yazılar', nextProject: 'sonraki proje', minRead: 'dk okuma', fig: 'şekil',
@@ -63,6 +65,8 @@ function localize(lang) {
     skills: t.skills || EN.skills,
     languages: t.languages || EN.languages,
     interests: t.interests || EN.interests,
+    currently: EN.currently.map((e, i) => merge(e, t.currently?.[i])),
+    favorites: EN.favorites.map((e, i) => merge(e, t.favorites?.[i])),
     posts: EN.posts.map((p) => merge(p, t.posts?.[p.slug])),
   };
 }
@@ -171,6 +175,26 @@ ${body}
 </a>`;
   }
 
+  function currently() {
+    const latest = C.posts[0];
+    const rows = [
+      ...C.currently,
+      ...(latest ? [{ key: 'latest', value: latest.title, href: `${base}writing/${latest.slug}.html` }] : []),
+    ];
+    const val = (r) => r.href ? `<a href="${r.href}"${ext(r.href)}>${esc(r.value)}${/^https?:/.test(r.href) ? ' &#8599;' : ''}</a>` : esc(r.value);
+    return `<aside class="now" aria-label="${ui.currently}">
+    <div class="now-head mono"><span>// ${ui.currently}</span><i class="now-led" aria-hidden="true"></i></div>
+    <dl>${rows.map((r) => `<div><dt class="mono">${ui.now[r.key] || esc(r.key)}</dt><dd>${val(r)}${r.note ? `<span class="dim now-note">${esc(r.note)}</span>` : ''}</dd></div>`).join('')}</dl>
+  </aside>`;
+  }
+
+  function favorites() {
+    return `<div class="favs">
+    <span class="mono dim">// ${ui.favorites}</span>
+    <ul class="fav-list">${C.favorites.map((f) => `<li><div class="fav-head"><span class="fav-title">${esc(f.title)}</span><span class="mono dim">${esc(f.year)} &middot; ${esc(f.kind.toLocaleLowerCase(locale))}</span></div><p>${esc(f.note)}</p></li>`).join('')}</ul>
+  </div>`;
+  }
+
   function index() {
     const p = C.person;
     const [l1, l2, l3] = ui.lede;
@@ -189,11 +213,14 @@ ${body}
 </section>
 
 <section class="sec intro">
-  <p class="lede">${esc(l1)}<span class="hl">${esc(l2)}</span>${esc(l3)}</p>
-  <div class="mono intro-links">
-    <a href="mailto:${p.email}">${esc(p.email)}</a>
-    ${personLinks()}
+  <div class="intro-main">
+    <p class="lede">${esc(l1)}<span class="hl">${esc(l2)}</span>${esc(l3)}</p>
+    <div class="mono intro-links">
+      <a href="mailto:${p.email}">${esc(p.email)}</a>
+      ${personLinks()}
+    </div>
   </div>
+  ${currently()}
 </section>
 
 <section class="sec">
@@ -244,6 +271,7 @@ ${body}
       <div><dt class="mono">${ui.about.outside}</dt><dd>${C.interests.map(esc).join(', ')}</dd></div>
     </dl>
   </div>
+  ${favorites()}
 </section>
 
 <section class="sec contact" id="contact">

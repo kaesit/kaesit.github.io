@@ -156,6 +156,19 @@ export default {
   languages: ["Türkçe (ana dil)", "İngilizce (orta / ileri)"],
   interests: ["Film yapımı", "Oyun yapımı", "Müzik besteleme", "Grafik tasarım"],
 
+  currently: [
+    { note: "Tıbbi cihazlar arasındaki iletişimi kolaylaştıran bir platform." },
+    { value: "Yazılım Mühendisliği, Fırat Üniversitesi" },
+  ],
+
+  favorites: [
+    { kind: "Dizi", note: "Birinin farklı bir şeyi anlatma konusunda bu kadar cesur, bu kadar gerçekçi olup yine de bir şekilde izletebileceğini hiç düşünmemiştim." },
+    { kind: "Dizi", note: "Komedi." },
+    { kind: "Film", note: "Sonu hem inananlara hem inanmayanlara harika bir cevap. Gerçekten şunu soruyor: sadece bilime mi, sadece dine mi ihtiyacın var, yoksa ikisi bir aradayken mi daha iyi?" },
+    { title: "The Matrix ve Gladyatör", kind: "Filmler", note: "Çocukken izlediğim ilk filmler; bu yüzden kalbimde özel bir yerleri var." },
+    { kind: "Film", note: "Bana ilham verdi ama Jobs'un gerçek yüzünü de gösterdi. Filmden hem ilham alarak hem de Jobs'un çocukken sandığımız kadar saf biri olmadığını bilerek çıktım." },
+  ],
+
   posts: {
     "lstm-or-graph-vae": {
       title: "LSTM mi, Graph-VAE mi? Molekül Üretiminde Alışılmış Seçimi Test Etmek",
