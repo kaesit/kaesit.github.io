@@ -5,6 +5,7 @@ The personal site of Esad Abdullah Kösedağ. Plain HTML/CSS/JS, no framework an
 ## Edit
 
 All text lives in `content.mjs`: work, experience, repos, posts and the gradient palettes.
+Turkish text lives in `content.tr.mjs`. Anything missing there falls back to English. English pages are built to `/`, Turkish pages to `/tr/`.
 Styles are in `assets/style.css`, and the WebGL backgrounds are in `assets/gradient.js`.
 
 ## Build and preview
