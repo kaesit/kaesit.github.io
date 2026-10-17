@@ -229,11 +229,11 @@ export const currently = [
 
 // Favorites in the About section, in Esad's own words.
 export const favorites = [
-  { title: 'Mr. Robot', year: '2015–2019', kind: 'Series', note: 'I never thought someone would be this brave about telling something different, be this realistic, and still somehow make you watch it.' },
-  { title: 'Kardeş Payı', year: '2014–2015', kind: 'Series', note: 'The Best Turkish Comedy Show' },
+  { title: 'Mr. Robot', year: '2015–2019', kind: 'Series', note: 'I never thought a show would be this brave about telling something different and being this realistic, yet somehow still keep you watch it.' },
+  { title: 'Kardeş Payı', year: '2014–2015', kind: 'Series', note: 'The best Turkish comedy series of all time.' },
   { title: 'Contact', year: '1997', kind: 'Film', note: 'The ending is a great answer to both believers and non-believers. It really asks: do you only need science, or religion, or is it better when they’re together?' },
   { title: 'The Matrix & The Gladiator', year: '1999, 2000', kind: 'Films', note: 'The very first movies I ever watched as a kid, so they have a special place in my heart.' },
-  { title: 'Jobs', year: '2013', kind: 'Film', note: 'It inspired me, but it also showed the real side of Steve Jobs. I left the movie inspired, and knowing Steve Jobs wasn’t as pure as we thought when we were kids. But it still inspires me how he thinks and executes in such a visionary way ' },
+  { title: 'Jobs', year: '2013', kind: 'Film', note: "It deeply inspired me while revealing the flawed, human side of Steve Jobs. I left the theater inspired, realizing he wasn't the perfect hero we imagined as kids—yet his visionary thinking and execution remain truly inspiring. " },
 ];
 
 // Blog posts. Body is a list of blocks: ['h2'|'h3'|'p', text] or ['ul', [items]].
