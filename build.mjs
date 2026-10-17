@@ -5,7 +5,7 @@ import * as EN from './content.mjs';
 import TR from './content.tr.mjs';
 
 const OUT = 'dist';
-const LANGS = { en: { base: '/', locale: 'en-GB' }, tr: { base: '/tr/', locale: 'tr-TR' } };
+const LANGS = { en: { base: '/', locale: 'en-GB', og: 'en_US' }, tr: { base: '/tr/', locale: 'tr-TR', og: 'tr_TR' } };
 
 const UI = {
   en: {
@@ -90,12 +90,22 @@ function page(C, lang) {
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
 <meta name="theme-color" content="#050506">
-<meta property="og:title" content="${esc(title)}">
-<meta property="og:description" content="${esc(description)}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${C.site.url}${base}${path}">
+<link rel="canonical" href="${C.site.url}${base}${path}">
 <link rel="alternate" hreflang="en" href="${C.site.url}/${path}">
 <link rel="alternate" hreflang="tr" href="${C.site.url}/tr/${path}">
+<link rel="alternate" hreflang="x-default" href="${C.site.url}/${path}">
+<meta property="og:site_name" content="${esc(C.person.name)}">
+<meta property="og:title" content="${esc(title)}">
+<meta property="og:description" content="${esc(description)}">
+<meta property="og:type" content="${path.startsWith('writing/') ? 'article' : 'website'}">
+<meta property="og:url" content="${C.site.url}${base}${path}">
+<meta property="og:locale" content="${LANGS[lang].og}">
+<meta property="og:image" content="${C.site.url}/og-${lang}.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(C.person.name)} — ${esc(C.person.role)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${C.site.url}/og-${lang}.jpg">
 <script>try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.dataset.theme='light'}catch(e){}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -348,6 +358,7 @@ ${story}
 await rm(OUT, { recursive: true, force: true });
 await cp('assets', OUT, { recursive: true });
 let count = 0;
+const paths = [];
 for (const lang of Object.keys(LANGS)) {
   const C = localize(lang);
   const dir = OUT + LANGS[lang].base.replace(/\/$/, '');
@@ -359,5 +370,24 @@ for (const lang of Object.keys(LANGS)) {
   for (const [i, w] of C.work.entries()) await writeFile(`${dir}/work/${w.slug}.html`, P.workPage(w, i));
   for (const s of C.posts) await writeFile(`${dir}/writing/${s.slug}.html`, P.postPage(s));
   count += 1 + C.work.length + C.posts.length;
+  if (lang === 'en') paths.push('', ...C.work.map((w) => `work/${w.slug}.html`), ...C.posts.map((p) => `writing/${p.slug}.html`));
 }
+
+// sitemap.xml lists every page in both languages; robots.txt points crawlers to it.
+const url = (lang, p) => `${EN.site.url}${LANGS[lang].base}${p}`;
+const entry = (lang, p) => `  <url>
+    <loc>${url(lang, p)}</loc>
+    <lastmod>${EN.site.updated}</lastmod>
+${Object.keys(LANGS).map((l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${url(l, p)}"/>`).join('\n')}
+  </url>`;
+await writeFile(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${Object.keys(LANGS).flatMap((l) => paths.map((p) => entry(l, p))).join('\n')}
+</urlset>
+`);
+await writeFile(`${OUT}/robots.txt`, `User-agent: *
+Allow: /
+
+Sitemap: ${EN.site.url}/sitemap.xml
+`);
 console.log(`built ${count + 1} pages -> ${OUT}/`);

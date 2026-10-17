@@ -15,7 +15,9 @@ node build.mjs
 node serve.mjs
 ```
 
-`build.mjs` writes the finished site to `dist/`. `serve.mjs` serves it at http://localhost:4321.
+`build.mjs` writes the finished site to `dist/`, including `sitemap.xml` and `robots.txt`. `serve.mjs` serves it at http://localhost:4321.
+
+The social preview images (`assets/og-en.jpg`, `assets/og-tr.jpg`) only need regenerating if your name, role or the hero gradient changes. With `serve.mjs` running, run `node tools/og.mjs` (needs Chrome and ImageMagick), then build again.
 
 ## Adding things
 

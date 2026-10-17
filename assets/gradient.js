@@ -152,7 +152,7 @@ void main(){
     let mw = 1, mh = 1;
     for (const it of items) {
       const r = it.el.getBoundingClientRect();
-      it.scale = dpr * 0.5;
+      it.scale = dpr * (parseFloat(it.el.dataset.scale) || 0.5);
       const w = Math.max(2, Math.round(r.width * it.scale));
       const h = Math.max(2, Math.round(r.height * it.scale));
       if (w !== it.w || h !== it.h) { it.w = it.el.width = w; it.h = it.el.height = h; }
