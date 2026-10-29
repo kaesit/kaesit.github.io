@@ -17,14 +17,14 @@ export default {
       period: "Eki 2025 — devam ediyor",
       org: "Açık kaynak proje",
       readouts: [
-        ["32.437", "57.619 ham kayıttan temizlenen bileşik"],
-        ["%95 / %90", "geçerli molekül, LSTM / Graph-VAE"],
-        ["−%10", "LSTM hattına göre BBB toksisitesi"],
+        ["v0.1", "deneysel, yalnızca araştırma amaçlı"],
+        ["4", "yazılım yığınındaki bölüm"],
+        ["Açık", "kaynak, GitHub'da"],
       ],
       bullets: [
-        "6 kinaz inhibitörüne ait bir veri setini düzenleyip ön işledim; 57.619 ham moleküler kaydı, üretken model eğitimi için 32.437 kanonik ve tekilleştirilmiş bileşiğe indirdim.",
-        "De novo ilaç adayı üretimi (SMILES) için iki üretken mimariyi eğitip karşılaştırdım: bir LSTM ve bir Graph-VAE modeli. Kimyasal olarak geçerli bileşik üretiminde sırasıyla %95 ve %90 doğruluk elde ettim.",
-        "LSTM ile üretilen adayların %90'ında BBB toksisitesi olduğunu tespit ettim; hattı Graph-VAE mimarisiyle yeniden kurarak BBB toksisitesini %10 azalttım ve hedefe yönelik tedavi için adayların güvenlik profilini iyileştirdim.",
+        "Kamuya açık moleküler verileri, üretken model eğitimi için kanonik ve tekilleştirilmiş bileşiklere dönüştürdüm.",
+        "De novo ilaç adayı üretimi için iki üretken model ailesini eğitip karşılaştırdım: SMILES tabanlı bir LSTM ve bir Graph-VAE.",
+        "Aday üretim hattına ADMET tabanlı toksisite taraması ekledim.",
         "Veri alımından aday üretimine kadar uçtan uca süreci destekleyen tam yığın bir ilaç keşfi platformu tasarladım (Python/FastAPI backend, C#/.NET servis katmanı, React frontend, MongoDB).",
       ],
       story: {
@@ -164,35 +164,6 @@ export default {
   ],
 
   posts: {
-    "lstm-or-graph-vae": {
-      title: "LSTM mi, Graph-VAE mi? Molekül Üretiminde Alışılmış Seçimi Test Etmek",
-      dek: "Standart SMILES LSTM'ini neden bir graf modeliyle karşılaştırdım ve hangisi nerede kazandı.",
-      category: "Makine öğrenmesi",
-      body: [
-        ["p", "OncoMind için ilaç adayları üretmeye başladığımda bulduğum örneklerin neredeyse hepsi aynı modeli kullanıyordu: molekülleri SMILES dizileri olarak, karakter karakter yazan bir LSTM. Bunun neden standart hâline geldiğini ve ihtiyacım olan şey için farklı bir mimarinin daha iyisini yapıp yapamayacağını merak edip durdum."],
-        ["h2", "Soru"],
-        ["p", "SMILES dizisi, bir molekülü tek satırlık metin olarak yazmanın bir yolu. LSTM bu metnin gramerini öğrenir ve bu gramere uyan yeni diziler yazar. Graph-VAE ise farklı çalışır: molekülü atomların düğüm, bağların kenar olduğu bir graf olarak ele alır ve yeni graflar örnekleyebileceği bir uzay öğrenir."],
-        ["p", "Sorum basitti: model, molekülü bir metin satırı yerine yapısıyla görürse daha iyi adaylar üretir mi?"],
-        ["h2", "Kurulum"],
-        ["p", "İki modeli de aynı veriyle eğittim: 6 kinaz inhibitörüyle ilişkili bileşikler. Ham veride 57.619 kayıt vardı. Kanonikleştirme ve tekrarları temizleme sonrasında eğitim için 32.437 bileşik kaldı. Temizlik, eğitimden daha çok emek istedi. Verideki küçük bir hata, ileride binlerce kötü moleküle dönüşüyor."],
-        ["p", "Sonra her modelin ürettiği molekülleri dört açıdan karşılaştırdım:"],
-        ["ul", [
-          "Geçerlilik: çıktının gerçek, kimyasal olarak geçerli bir molekül olup olmadığı.",
-          "Sentetik erişilebilirlik: molekülün laboratuvarda üretilmesinin ne kadar zor olacağı.",
-          "Benzersizlik: üretilen moleküllerin ne kadarının birbirinden farklı olduğu.",
-          "BBB geçirgenliği: molekülün kan–beyin bariyerini geçme ihtimali; bu adaylar için bunu bir toksisite riski olarak ele aldım.",
-        ]],
-        ["h2", "Ne oldu"],
-        ["p", "LSTM geçerlilik ve sentetik erişilebilirlikte kazandı. Yazdıklarının daha büyük kısmı geçerliydi ve moleküllerini üretmek daha kolaydı."],
-        ["p", "Graph-VAE ikisinde de daha kötüydü. Ama en çok önemsediğim iki sonuçta açıkça daha iyiydi: çok daha fazla benzersiz molekül üretti ve adaylarının daha azının kan–beyin bariyerini geçeceği tahmin edildi. LSTM'in adaylarının çoğu BBB geçirgenliği nedeniyle işaretlendi."],
-        ["h2", "Bence LSTM neden standart"],
-        ["p", "Bu, deneyden sonraki tahminim; kanıtlanmış bir kural değil. LSTM, eğitim verisindeki kalıpları takip etmekte çok iyi. Bu da geçerli ve sentezlemesi kolay moleküller veriyor; birçok karşılaştırmanın ödüllendirdiği şey de tam olarak bu. Ama aynı alışkanlık, çıktılarını hem birbirine hem de eğitim setine benzetiyor; kaçınmak isteyebileceğin özellikler de buna dahil. Graf modeli daha çok keşfediyor ve bunun bedelini daha sık geçersiz ya da üretmesi daha zor moleküllerle ödüyor."],
-        ["h2", "Bundan çıkardıklarım"],
-        ["p", "Tek bir kazanan yoktu. Hangi modelin “daha doğru” olduğu, neyi ölçtüğüne bağlı. OncoMind'da hattı Graph-VAE'ye taşıdım, çünkü bu aşamada yeni ve daha güvenli adaylar benim için kolay olanlardan daha önemli. Geçersiz bir molekülü atmak kolay; kan–beyin bariyerini geçen geçerli bir molekül ise daha zor bir sorun."],
-        ["p", "LSTM'in yanlış bir seçim olduğunu düşünmüyorum. Güçlü bir temel model ve bu karşılaştırma, ancak onunla kıyaslayabildiğim için bir anlam taşıdı."],
-        ["p", "Molekül üretimi üzerine çalıştıysan ve gözden kaçırdığım bir şey olduğunu düşünüyorsan, duymak isterim."],
-      ],
-    },
     "interuniverse-fungal-civilization": {
       title: "Evrenlerarası Mantar Medeniyeti",
       dek: "Uzaylılar üzerine küçük bir beyin fırtınası.",

@@ -50,15 +50,16 @@ export const work = [
     org: 'Open-source project',
     stack: ['Python', 'FastAPI', 'C# / .NET', 'React', 'MongoDB', 'PyTorch', 'RDKit'],
     palette: 'oncomind',
+    // Kept qualitative on purpose: research results stay out of the site until they are published.
     readouts: [
-      ['32,437', 'compounds after cleaning 57,619 raw entries'],
-      ['95% / 90%', 'valid molecules, LSTM / Graph-VAE'],
-      ['−10%', 'BBB toxicity vs. the LSTM pipeline'],
+      ['v0.1', 'experimental, research only'],
+      ['4', 'parts in the software stack'],
+      ['Open', 'source, on GitHub'],
     ],
     bullets: [
-      'Curated and preprocessed a dataset of 6 kinase inhibitors, cleaning 57,619 raw molecular entries down to 32,437 canonicalized, deduplicated compounds for generative model training.',
-      'Trained and benchmarked two generative architectures for de novo drug candidate synthesis (SMILES): an LSTM model and a Graph-VAE model, achieving 95% and 90% accuracy respectively in generating chemically viable compounds.',
-      'Identified that LSTM-generated candidates exhibited 90% BBB toxicity; re-engineered the pipeline with the Graph-VAE architecture to reduce BBB toxicity by 10%, improving candidate safety profile for targeted therapy.',
+      'Curated and preprocessed public molecular data into canonicalized, deduplicated compounds for generative model training.',
+      'Trained and compared two generative model families for de novo drug candidate generation: a SMILES-based LSTM and a Graph-VAE.',
+      'Added ADMET-based toxicity screening to the candidate pipeline.',
       'Architected a full-stack drug discovery platform (Python/FastAPI backend, C#/.NET service layer, React frontend, MongoDB) to support the end-to-end pipeline from data ingestion to candidate generation.',
     ],
     story: {
@@ -233,39 +234,6 @@ export const favorites = [
 // Blog posts. Body is a list of blocks: ['h2'|'h3'|'p', text] or ['ul', [items]].
 // The two older posts were carried over from the Framer site.
 export const posts = [
-  {
-    slug: 'lstm-or-graph-vae',
-    title: 'LSTM or Graph-VAE? Testing the Usual Choice for Molecule Generation',
-    dek: 'Why I tested a graph model against the standard SMILES LSTM, and where each one won.',
-    date: '2026-10-17',
-    category: 'Machine learning',
-    minutes: 4,
-    palette: 'graph',
-    body: [
-      ['p', 'When I started generating drug candidates for OncoMind, almost every example I found used the same model: an LSTM that writes molecules as SMILES strings, one character at a time. I kept wondering why that became the norm, and whether a different architecture could do better for what I needed.'],
-      ['h2', 'The question'],
-      ['p', 'A SMILES string is a way of writing a molecule as a line of text. An LSTM learns the grammar of that text and writes new strings that follow it. A Graph-VAE works differently: it treats a molecule as a graph, with atoms as nodes and bonds as edges, and learns a space it can sample new graphs from.'],
-      ['p', 'My question was simple. If the model sees the structure of the molecule instead of a line of text, does it produce better candidates?'],
-      ['h2', 'The setup'],
-      ['p', 'I trained both models on the same data: compounds related to 6 kinase inhibitors. The raw data had 57,619 entries. After canonicalizing and removing duplicates, 32,437 compounds were left for training. Cleaning took more effort than training. A small mistake in the data turns into thousands of bad molecules later.'],
-      ['p', 'Then I compared the molecules each model generated on four things:'],
-      ['ul', [
-        'Validity: whether the output is a real, chemically valid molecule.',
-        'Synthetic accessibility: how hard the molecule would be to make in a lab.',
-        'Uniqueness: how many of the generated molecules are different from each other.',
-        'BBB permeability: whether the molecule is likely to cross the blood–brain barrier, which I treated as a toxicity risk for these candidates.',
-      ]],
-      ['h2', 'What happened'],
-      ['p', 'The LSTM won on validity and synthetic accessibility. More of what it wrote was valid, and its molecules were easier to make.'],
-      ['p', 'The Graph-VAE was worse on both. But it was clearly better on the two results I cared about most. It produced many more unique molecules, and fewer of its candidates were predicted to cross the blood–brain barrier. Most of the LSTM’s candidates were flagged for BBB permeability.'],
-      ['h2', 'Why I think the LSTM is the norm'],
-      ['p', 'This is my guess after the experiment, not a proven rule. An LSTM is very good at following the patterns in its training data. That gives you valid molecules that are easy to synthesize, which is what many benchmarks reward. The same habit also makes its outputs similar to each other and to the training set, including properties you might want to avoid. A graph model explores more, and it pays for that with molecules that are more often invalid or harder to make.'],
-      ['h2', 'What I took from it'],
-      ['p', 'There was no single winner. Which model is “more accurate” depends on what you measure. For OncoMind I moved the pipeline to the Graph-VAE, because at this stage new and safer candidates matter more to me than easy ones. An invalid molecule is easy to throw away; a valid one that crosses the blood–brain barrier is the harder problem.'],
-      ['p', 'I don’t think the LSTM is the wrong choice. It is a strong baseline, and this comparison only meant something because I had it to compare against.'],
-      ['p', 'If you have worked on molecule generation and think I missed something, I would like to hear it.'],
-    ],
-  },
   {
     slug: 'interuniverse-fungal-civilization',
     title: 'Interuniverse Fungal Civilization',
