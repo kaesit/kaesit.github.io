@@ -33,12 +33,6 @@ export default {
         result: "Proje hâlâ devam ediyor ve bu on yılda bitmeyecek. Belki bir sonrakinde :)",
       },
       links: ["Depo"],
-      gallery: [
-        "Molekül ağırlığı ve QED değerleriyle üretilen ilaç adayları",
-        "Vücut üzerine işlenmiş ADMET toksisite raporu",
-        "OncoMind OS giriş ekranı",
-        "Eğitim verisi: 57.619 ham molekül, kanonikleştirme sonrası 32.437",
-      ],
     },
     "alcin-uav": {
       title: "Alçın İHA Takımı",

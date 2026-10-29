@@ -41,6 +41,7 @@ export const palettes = {
 export const work = [
   {
     slug: 'oncomind',
+    route: 'oncomind/', // has its own preview page instead of a work/ page
     title: 'OncoMind',
     kicker: 'Bioinformatics, drug discovery',
     summary: 'An open-source, AI-driven drug discovery and bioinformatics research platform for leukemia.',
@@ -66,13 +67,6 @@ export const work = [
       result: 'The project is still ongoing, and it is not going to end in this decade. Maybe the next one :)',
     },
     links: [{ label: 'Repository', href: 'https://github.com/kaesit/oncomind' }],
-    // Screenshots of the OncoMind web app (v0.1 presentation demo)
-    gallery: [
-      { src: 'img/oncomind-candidates.jpg', w: 1610, h: 1060, wide: true, caption: 'Generated drug candidates with QED and molecular weight' },
-      { src: 'img/oncomind-toxicity.jpg', w: 1500, h: 860, caption: 'ADMET toxicity report mapped onto the body' },
-      { src: 'img/oncomind-sign-in.jpg', w: 980, h: 640, caption: 'Sign-in screen of OncoMind OS' },
-      { src: 'img/oncomind-analytics.jpg', w: 846, h: 356, wide: true, caption: 'Training data: 57,619 raw molecules, 32,437 after canonicalization' },
-    ],
   },
   {
     slug: 'alcin-uav',
@@ -189,7 +183,7 @@ export const experience = [
 
 // Timeline shown in the experience section (newest first).
 export const timeline = [
-  { period: '2025 —', role: 'Project founder', org: 'OncoMind', href: 'work/oncomind.html' },
+  { period: '2025 —', role: 'Project founder', org: 'OncoMind', href: 'oncomind/' },
   { period: '2025', role: 'Scrum master & AI engineer', org: 'BudgetTravel', href: 'work/budgettravel.html' },
   { period: '2023', role: 'Junior software developer', org: 'BB Technologies', href: '#bb-technologies' },
   { period: '2023 — 24', role: 'Computer vision & UAV systems engineer', org: 'Alçın UAV Team', href: 'work/alcin-uav.html' },

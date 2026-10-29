@@ -3,6 +3,7 @@
 import { mkdir, rm, writeFile, cp } from 'node:fs/promises';
 import * as EN from './content.mjs';
 import TR from './content.tr.mjs';
+import * as ONCO from './oncomind.mjs';
 
 const OUT = 'dist';
 const LANGS = { en: { base: '/', locale: 'en-GB', og: 'en_US' }, tr: { base: '/tr/', locale: 'tr-TR', og: 'tr_TR' } };
@@ -87,7 +88,7 @@ function page(C, lang) {
   const canvas = (key, extra = '') => `<canvas class="gl" data-palette="${pal(key)}"${extra} aria-hidden="true"></canvas>`;
   const href = (p) => (p.startsWith('#') ? base + p : base + p);
 
-  function layout({ title, description, body, path }) {
+  function layout({ title, description, body, path, head = '', scripts = '', bodyClass = '', noDate = false }) {
     return `<!doctype html>
 <html lang="${lang}">
 <head>
@@ -119,8 +120,9 @@ function page(C, lang) {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="/style.css">
+${head}
 </head>
-<body>
+<body${bodyClass ? ` class="${bodyClass}"` : ''}>
 <a class="skip" href="#main">${ui.skip}</a>
 <header class="bar">
   <div class="wrap bar-in">
@@ -140,11 +142,12 @@ function page(C, lang) {
 ${body}
 </main>
 <footer class="wrap foot mono">
-  <span>&copy; ${new Date(C.site.updated).getFullYear()} ${esc(C.person.name)}</span>
-  <span>${ui.updated} ${C.site.updated}</span>
+  <span>&copy; ${noDate ? '' : new Date(C.site.updated).getFullYear() + ' '}${esc(C.person.name)}</span>
+  ${noDate ? '' : `<span>${ui.updated} ${C.site.updated}</span>`}
 </footer>
 <script src="/site.js" defer></script>
 <script src="/gradient.js" defer></script>
+${scripts}
 </body>
 </html>
 `;
@@ -158,12 +161,15 @@ ${body}
 </div>`;
 
   const readouts = (list, cls = '') => list.length ? `<dl class="readouts ${cls}">${list.map(([v, l]) => `<div><dt>${esc(v)}</dt><dd>${esc(l)}</dd></div>`).join('')}</dl>` : '';
-  const linkList = (links) => links.map((l) => `<a href="${l.href}"${ext(l.href)}>${esc(l.label.toLowerCase())} &#8599;</a>`).join('');
+  // A link with local: true is a page on this site, resolved against the current language.
+  const linkList = (links) => links.map((l) => l.local
+    ? `<a href="${base}${l.href}">${esc(l.label.toLowerCase())} &rarr;</a>`
+    : `<a href="${l.href}"${ext(l.href)}>${esc(l.label.toLowerCase())} &#8599;</a>`).join('');
   const personLinks = () => linkList([...C.person.links, ...(C.person.cv ? [{ label: ui.cv, href: C.person.cv }] : [])]);
 
   function workCard(w, i) {
     return `
-<a class="card${i === 0 ? ' card-lead' : ''}" href="${base}work/${w.slug}.html">
+<a class="card${i === 0 ? ' card-lead' : ''}" href="${base}${w.route || `work/${w.slug}.html`}">
   <div class="card-art">${canvas(w.palette)}<span class="mono card-idx">.${pad(i + 1)}</span></div>
   <div class="card-body">
     <div class="mono meta">${esc(w.period)} <span class="dim">/</span> ${esc(w.kicker)}</div>
@@ -340,7 +346,7 @@ ${figure}
 ${gallery}
 ${story}
 
-<a class="next" href="${base}work/${next.slug}.html">
+<a class="next" href="${base}${next.route || `work/${next.slug}.html`}">
   <span class="mono dim">${ui.nextProject}</span>
   <span class="next-title">${esc(next.title)} <span aria-hidden="true">&rarr;</span></span>
 </a>`;
@@ -383,7 +389,13 @@ ${story}
     return layout({ path: '404.html', title: `404 — ${C.person.name}`, description: ui.notFound, body });
   }
 
-  return { index, workPage, postPage, notFound };
+  // OncoMind project preview (oncomind.mjs holds its copy and markup).
+  function oncomind() {
+    const o = ONCO.render({ lang, base, esc, canvas, ticks });
+    return layout({ path: 'oncomind/', title: o.title, description: o.description, body: o.body, head: o.head, scripts: o.scripts, bodyClass: 'onco-page', noDate: true });
+  }
+
+  return { index, workPage, postPage, notFound, oncomind };
 }
 
 await rm(OUT, { recursive: true, force: true });
@@ -398,10 +410,12 @@ for (const lang of Object.keys(LANGS)) {
   await mkdir(`${dir}/writing`, { recursive: true });
   await writeFile(`${dir}/index.html`, P.index());
   if (lang === 'en') await writeFile(`${dir}/404.html`, P.notFound());
-  for (const [i, w] of C.work.entries()) await writeFile(`${dir}/work/${w.slug}.html`, P.workPage(w, i));
+  for (const [i, w] of C.work.entries()) if (!w.route) await writeFile(`${dir}/work/${w.slug}.html`, P.workPage(w, i));
   for (const s of C.posts) await writeFile(`${dir}/writing/${s.slug}.html`, P.postPage(s));
-  count += 1 + C.work.length + C.posts.length;
-  if (lang === 'en') paths.push('', ...C.work.map((w) => `work/${w.slug}.html`), ...C.posts.map((p) => `writing/${p.slug}.html`));
+  await mkdir(`${dir}/oncomind`, { recursive: true });
+  await writeFile(`${dir}/oncomind/index.html`, P.oncomind());
+  count += 2 + C.work.filter((w) => !w.route).length + C.posts.length;
+  if (lang === 'en') paths.push('', 'oncomind/', ...C.work.filter((w) => !w.route).map((w) => `work/${w.slug}.html`), ...C.posts.map((p) => `writing/${p.slug}.html`));
 }
 
 // sitemap.xml lists every page in both languages; robots.txt points crawlers to it.
